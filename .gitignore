@@ -1,0 +1,61 @@
+# Compilación de .NET
+bin/
+obj/
+out/
+
+# Rider/JetBrains
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+
+# Archivos de usuario de Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración de Rider
+.idea/
+*.DotSettings
+*.DotSettings.user
+
+# Paquetes NuGet
+*.nupkg
+# Carpetas de dependencias locales
+packages/
+# Archivos generados por NuGet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Configuración de logs, dumps y depuración
+*.log
+*.vspscc
+TestResults/
+*.swp
+*.bak
+
+# Configuración de Docker que no quieras subir
+*.db
+*.mdf
+*.ldf
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Archivos de backup de Rider/VS
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.resharper
+*.sln.ide
+*.orig
+
+# Archivos de configuración local
+.env
+.env.*
+
+# Directorio de datos de Docker (si lo tienes local)
+data/
