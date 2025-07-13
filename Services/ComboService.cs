@@ -23,14 +23,15 @@ public class ComboService : IComboService
             .Include(c => c.ComboDulces).ThenInclude(cd => cd.DulceTipico)
             .FirstOrDefaultAsync(c => c.Id == id);
 
+    // Ahora recibe Combo directamente (no ComboDto)
     public async Task<Combo> CreateAsync(ComboDto dto)
     {
         var combo = new Combo
         {
             Nombre = dto.Nombre,
-            Precio = dto.Precio,
             Tipo = dto.Tipo,
             TipoCombo = dto.TipoCombo,
+            Precio = dto.Precio,
             Observaciones = dto.Observaciones,
             UrlImagen = dto.UrlImagen,
             ComboChurrascos = dto.ChurrascoIds.Select(cid => new ComboChurrasco { ChurrascoId = cid }).ToList(),
@@ -40,6 +41,7 @@ public class ComboService : IComboService
         await _db.SaveChangesAsync();
         return combo;
     }
+
 
     public async Task<bool> UpdateAsync(int id, ComboDto dto)
     {
@@ -54,13 +56,14 @@ public class ComboService : IComboService
         combo.Tipo = dto.Tipo;
         combo.TipoCombo = dto.TipoCombo;
         combo.Observaciones = dto.Observaciones;
+        combo.UrlImagen = dto.UrlImagen;
 
-        // Actualiza los churrascos del combo
+        // Actualiza los churrascos
         combo.ComboChurrascos.Clear();
         foreach (var cid in dto.ChurrascoIds)
             combo.ComboChurrascos.Add(new ComboChurrasco { ChurrascoId = cid, ComboId = id });
 
-        // Actualiza los dulces del combo
+        // Actualiza los dulces
         combo.ComboDulces.Clear();
         foreach (var did in dto.DulceIds)
             combo.ComboDulces.Add(new ComboDulce { DulceTipicoId = did, ComboId = id });
