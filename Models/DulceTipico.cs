@@ -11,4 +11,6 @@ public class DulceTipico : ProductoBase
     public string Empaque { get; set; } = null!; // Unidad, Caja
 
     public int CantidadEnCaja { get; set; }
+    
+    public string? UrlImagen { get; set; }
 }

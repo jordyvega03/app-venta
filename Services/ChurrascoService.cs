@@ -29,16 +29,15 @@ public class ChurrascoService : IChurrascoService
         var existing = await _db.Churrascos.FindAsync(id);
         if (existing == null) return false;
 
-        // Actualiza propiedades relevantes
         existing.TipoCarne = churrasco.TipoCarne;
         existing.Termino = churrasco.Termino;
         existing.Tamaño = churrasco.Tamaño;
         existing.Porciones = churrasco.Porciones;
         existing.ChurrascoGuarniciones = churrasco.ChurrascoGuarniciones;
-        existing.Porciones = churrasco.Porciones;
         existing.Nombre = churrasco.Nombre;
         existing.Precio = churrasco.Precio;
         existing.Tipo = churrasco.Tipo;
+        existing.UrlImagen = churrasco.UrlImagen;
 
         await _db.SaveChangesAsync();
         return true;

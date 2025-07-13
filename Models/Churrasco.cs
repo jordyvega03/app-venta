@@ -14,6 +14,8 @@ public class Churrasco : ProductoBase
     public string Tamaño { get; set; } = null!; // Individual, Familiar
 
     public int Porciones { get; set; }
+    
+    public string? UrlImagen { get; set; } // Url de la imagen
 
     // Relación con Guarnición
     public List<ChurrascoGuarnicion> ChurrascoGuarniciones { get; set; } = new();

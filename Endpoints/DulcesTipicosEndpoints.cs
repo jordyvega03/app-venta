@@ -20,11 +20,28 @@ public static class DulcesTipicosEndpoints
             return dulce is not null ? Results.Ok(dulce) : Results.NotFound();
         }).WithTags("Dulces");
 
-        routes.MapPost("/api/dulces", async ([FromServices] IDulceTipicoService service, [FromBody] DulceTipicoDto dto) =>
-        {
-            var dulce = await service.CreateAsync(dto);
-            return Results.Created($"/api/dulces/{dulce.Id}", dulce);
-        }).WithTags("Dulces");
+        routes.MapPost("/api/dulces/upload", async (HttpRequest request, IWebHostEnvironment env) =>
+            {
+                var form = await request.ReadFormAsync();
+                var file = form.Files.GetFile("imagen");
+
+                if (file is null || file.Length == 0)
+                    return Results.BadRequest("Debe proporcionar una imagen válida.");
+
+                var uploadsPath = Path.Combine(env.WebRootPath ?? "wwwroot", "upload");
+                Directory.CreateDirectory(uploadsPath);
+
+                var extension = Path.GetExtension(file.FileName);
+                var fileName = $"dulce_{DateTime.Now:yyyyMMddHHmmss}{extension}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                await using var stream = File.Create(filePath);
+                await file.CopyToAsync(stream);
+
+                var url = $"http://localhost:5000/upload/{fileName}";
+                return Results.Ok(new { url });
+            })
+            .WithTags("Dulces");
 
         routes.MapPut("/api/dulces/{id}", async ([FromServices] IDulceTipicoService service, int id, [FromBody] DulceTipicoDto dto) =>
         {

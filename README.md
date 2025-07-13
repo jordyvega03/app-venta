@@ -102,7 +102,7 @@ Todos los endpoints están **agrupados y documentados en Swagger**.
 
 ## 🗃️ Modelo de Base de Datos
 
-*Agrega aquí tu diagrama ER (puedes hacerlo en [dbdiagram.io](https://dbdiagram.io) y pegar una imagen), o describe tus tablas y relaciones:*
+<img width="1736" height="2176" alt="Image" src="https://github.com/user-attachments/assets/bd1c19fc-ba70-4a1f-a001-8d8817582bf9" />
 
 ### **Entidades Principales**
 

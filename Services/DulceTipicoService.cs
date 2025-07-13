@@ -25,7 +25,8 @@ public class DulceTipicoService : IDulceTipicoService
             Tipo = dto.Tipo,
             TipoDulce = dto.TipoDulce,
             Empaque = dto.Empaque,
-            CantidadEnCaja = dto.CantidadEnCaja
+            CantidadEnCaja = dto.CantidadEnCaja,
+            UrlImagen = dto.UrlImagen
         };
         _db.DulcesTipicos.Add(dulce);
         await _db.SaveChangesAsync();
@@ -43,6 +44,7 @@ public class DulceTipicoService : IDulceTipicoService
         existing.TipoDulce = dto.TipoDulce;
         existing.Empaque = dto.Empaque;
         existing.CantidadEnCaja = dto.CantidadEnCaja;
+        existing.UrlImagen = dto.UrlImagen;
 
         await _db.SaveChangesAsync();
         return true;

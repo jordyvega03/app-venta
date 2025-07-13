@@ -57,6 +57,9 @@ namespace app_venta.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UrlImagen")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Churrascos");
@@ -114,6 +117,9 @@ namespace app_venta.Migrations
 
                     b.Property<string>("TipoCombo")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlImagen")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -205,6 +211,9 @@ namespace app_venta.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UrlImagen")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("DulcesTipicos");
@@ -253,6 +262,31 @@ namespace app_venta.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Inventarios");
+                });
+
+            modelBuilder.Entity("app_venta.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("app_venta.Models.ChurrascoGuarnicion", b =>

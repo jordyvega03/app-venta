@@ -20,6 +20,7 @@ public static class CombosEndpoints
                     TipoCombo = combo.TipoCombo,
                     Precio = combo.Precio,
                     Observaciones = combo.Observaciones,
+                    UrlImagen = combo.UrlImagen,
                     Churrascos = combo.ComboChurrascos.Select(cc => cc.Churrasco.Nombre).ToList(),
                     Dulces = combo.ComboDulces.Select(cd => cd.DulceTipico.Nombre).ToList()
                 }).ToList();
@@ -35,22 +36,29 @@ public static class CombosEndpoints
             return combo is not null ? Results.Ok(combo) : Results.NotFound();
         }).WithTags("Combos");
 
-        routes.MapPost("/api/combos", async ([FromServices] IComboService service, [FromBody] ComboDto dto) =>
+        routes.MapPost("/api/combos/upload", async (HttpRequest request) =>
             {
-                var combo = await service.CreateAsync(dto);
-                // Construye una respuesta DTO simple para no serializar ciclos
-                var result = new {
-                    combo.Id,
-                    combo.Nombre,
-                    combo.Tipo,
-                    combo.TipoCombo,
-                    combo.Precio,
-                    combo.Observaciones
-                    // puedes agregar ids de churrascos y dulces si quieres
-                };
-                return Results.Created($"/api/combos/{combo.Id}", result);
+                var form = await request.ReadFormAsync();
+                var file = form.Files.GetFile("file");
+
+                if (file == null || file.Length == 0)
+                    return Results.BadRequest("Archivo no válido.");
+
+                var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "upload");
+                if (!Directory.Exists(uploadsPath))
+                    Directory.CreateDirectory(uploadsPath);
+
+                var fileName = $"combo_{DateTime.Now:yyyyMMddHHmmss}{Path.GetExtension(file.FileName)}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(stream);
+
+                var url = $"http://localhost:5000/upload/{fileName}";
+                return Results.Ok(new { url });
             })
-            .WithTags("Combos");
+            .WithTags("Combos")
+            .DisableAntiforgery(); // Para evitar error en Swagger
 
         routes.MapPut("/api/combos/{id}", async ([FromServices] IComboService service, int id, [FromBody] ComboDto dto) =>
         {

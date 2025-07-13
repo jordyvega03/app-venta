@@ -1,4 +1,5 @@
 using app_venta.Dtos;
+using app_venta.Helpers;
 using app_venta.Services.Impl;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,12 +23,18 @@ public static class InventarioEndpoints
 
         routes.MapPost("/api/inventario", async ([FromServices] IInventarioService service, [FromBody] InventarioDto dto) =>
         {
+            var errors = ValidationHelper.Validate(dto);
+            if (errors.Any()) return Results.BadRequest(errors);
+
             var inventario = await service.CreateAsync(dto);
             return Results.Created($"/api/inventario/{inventario.Id}", inventario);
         }).WithTags("Inventario");
 
         routes.MapPut("/api/inventario/{id}", async ([FromServices] IInventarioService service, int id, [FromBody] InventarioDto dto) =>
         {
+            var errors = ValidationHelper.Validate(dto);
+            if (errors.Any()) return Results.BadRequest(errors);
+
             var updated = await service.UpdateAsync(id, dto);
             return updated ? Results.NoContent() : Results.NotFound();
         }).WithTags("Inventario");

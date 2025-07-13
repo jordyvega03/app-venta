@@ -32,6 +32,7 @@ public class ComboService : IComboService
             Tipo = dto.Tipo,
             TipoCombo = dto.TipoCombo,
             Observaciones = dto.Observaciones,
+            UrlImagen = dto.UrlImagen,
             ComboChurrascos = dto.ChurrascoIds.Select(cid => new ComboChurrasco { ChurrascoId = cid }).ToList(),
             ComboDulces = dto.DulceIds.Select(did => new ComboDulce { DulceTipicoId = did }).ToList()
         };

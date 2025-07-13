@@ -23,28 +23,45 @@ public static class ChurrascosEndpoints
         })
         .WithTags("Churrascos");
 
-        routes.MapPost("/api/churrascos", async ([FromServices] IChurrascoService service, [FromBody] ChurrascoCreateDto dto) =>
-        {
-            var churrasco = new Churrasco
+        routes.MapPost("/api/churrascos/upload", async (
+                [FromForm] ChurrascoUploadDto dto,
+                IChurrascoService service
+            ) =>
             {
-                Nombre = dto.Nombre,
-                Precio = dto.Precio,
-                Tipo = dto.Tipo,
-                TipoCarne = dto.TipoCarne,
-                Termino = dto.Termino,
-                Tamaño = dto.Tamaño,
-                Porciones = dto.Porciones,
-                ChurrascoGuarniciones = dto.ChurrascoGuarniciones.Select(g => new ChurrascoGuarnicion
-                {
-                    GuarnicionId = g.GuarnicionId,
-                    Cantidad = g.Cantidad
-                }).ToList()
-            };
+                string? imageUrl = null;
 
-            var nuevo = await service.CreateAsync(churrasco);
-            return Results.Created($"/api/churrascos/{nuevo.Id}", nuevo);
-        })
-        .WithTags("Churrascos");
+                if (dto.Imagen is not null && dto.Imagen.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "upload");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(dto.Imagen.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await dto.Imagen.CopyToAsync(stream);
+
+                    imageUrl = $"/upload/{uniqueFileName}";
+                }
+
+                var churrasco = new Churrasco
+                {
+                    Nombre = dto.Nombre,
+                    Precio = dto.Precio,
+                    Tipo = dto.Tipo,
+                    TipoCarne = dto.TipoCarne,
+                    Termino = dto.Termino,
+                    Tamaño = dto.Tamaño,
+                    Porciones = dto.Porciones,
+                    UrlImagen = imageUrl
+                };
+
+                var nuevo = await service.CreateAsync(churrasco);
+                return Results.Created($"/api/churrascos/{nuevo.Id}", nuevo);
+            })
+            .Accepts<ChurrascoUploadDto>("multipart/form-data")
+            .WithTags("Churrascos");
 
         routes.MapPut("/api/churrascos/{id}", async ([FromServices] IChurrascoService service, int id, [FromBody] ChurrascoCreateDto dto) =>
         {

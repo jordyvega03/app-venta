@@ -8,6 +8,8 @@ public class Combo : ProductoBase
     public string TipoCombo { get; set; } = null!; // Familiar, Evento, Personalizado
 
     public string? Observaciones { get; set; }
+    
+    public string? UrlImagen { get; set; }
 
     // Relación muchos-a-muchos con churrascos y dulces
     public List<ComboChurrasco> ComboChurrascos { get; set; } = new();
